@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+coverage/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Secrets
+*.pem
+*.key
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local data
+infra/postgres/data/
+
+# Editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
