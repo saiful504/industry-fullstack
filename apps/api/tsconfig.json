@@ -1,26 +1,43 @@
 {
   "compilerOptions": {
+    /* JavaScript output target */
     "target": "ES2023",
 
+    /* Node.js ESM configuration */
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
+    /* Source and build directories */
     "rootDir": "src",
     "outDir": "dist",
 
+    /* Type safety */
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
 
+    /* JavaScript interoperability */
     "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+
+    /* Build performance */
     "skipLibCheck": true,
 
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    /* Node.js types */
+    "types": ["node"],
 
-    "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    /* Output configuration */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    /* Class field behavior */
+    "useDefineForClassFields": true
   },
 
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

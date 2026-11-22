@@ -1,33 +1,46 @@
-import Fastify from "fastify";
-
-const app = Fastify({
-  logger: {
-    level: process.env.LOG_LEVEL ?? "info",
-
-    redact: ["req.headers.authorization", "req.headers.cookie"],
-  },
-});
-
-// Initial health endpoint
-app.get("/api/v1/health", async () => {
-  return {
-    status: "ok",
-    service: "industry-api",
-    timestamp: new Date().toISOString(),
-  };
-});
-
-// Start server
-const start = async (): Promise<void> => {
+import { is } from "zod/v4/locales";
+import { buildApp } from "./app.js";
+import { env } from "./config/env.js";
+const app = buildApp();
+let isShuttingDown = false;
+async function shutdown(signal: NodeJS.Signals): Promise<void> {
+  if (isShuttingDown) {
+    return;
+  }
+  isShuttingDown = true;
+  app.log.info({ signal }, "Shutdown  signal received ");
+  try {
+    await app.close();
+    app.log.info("Application closed gracefully ");
+  } catch (error) {
+    app.log.error({ err: error }, "Graceful shutdown failed");
+    process.exitCode = 1;
+  }
+  process.once("SIGINT", () => {
+    void shutdown("SIGINT");
+  });
+  process.once("SIGTERM", () => {
+    void shutdown("SIGTERM");
+  });
+}
+async function startServer(): Promise<void> {
   try {
     await app.listen({
-      host: process.env.API_HOST ?? "127.0.0.1",
-      port: Number(process.env.API_PORT ?? 4000),
+      host: env.API_HOST,
+      port: env.API_PORT,
     });
+    app.log.info(
+      { host: env.API_HOST, port: env.API_PORT },
+      "API server running ",
+    );
   } catch (error) {
-    app.log.error(error);
-    process.exit(1);
+    app.log.fatal({ err: error }, "ÄPI server startup failed ");
+    try {
+      await app.close();
+    } catch (closeError) {
+      app.log.error({ err: closeError }, "Application cleanup failed");
+    }
+    process.exitCode = 1;
   }
-};
-
-void start();
+}
+void startServer();

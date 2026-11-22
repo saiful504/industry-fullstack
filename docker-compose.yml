@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:latest
     pull_policy: never
-    container_name: industry-postgres
+    container_name: learn-fullstack-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -22,4 +22,4 @@ services:
 
 volumes:
   postgres_data:
-    name: industry-fullstack-postgres-data
+    name: learn-fullstack-postgres-data
